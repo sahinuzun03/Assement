@@ -1,4 +1,5 @@
-﻿using ReportRequest.Api.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using ReportRequest.Api.Entities;
 using ReportRequest.Api.Infrastructure.Context;
 using ReportRequest.Api.Repository.Abstract;
 using System;
@@ -20,9 +21,16 @@ namespace ReportRequest.Api.Repository.Concrete
             _context.ReportDetails.AddAsync(reportDetail);
         }
 
+        public async Task<ActionResult<ReportDetail>> GetReport(Guid id)
+        {
+            return await _context.ReportDetails.FindAsync(id);
+        }
+
         public async Task<bool> SaveChanges()
         {
             return (await _context.SaveChangesAsync() > 0);
         }
+
+        
     }
 }

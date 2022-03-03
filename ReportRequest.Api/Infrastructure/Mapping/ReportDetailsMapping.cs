@@ -17,6 +17,8 @@ namespace ReportRequest.Api.Infrastructure.Mapping
             builder.Property(rd => rd.Id).IsRequired();
 
             builder.Property(rd => rd.ReportDate).HasColumnType("date").IsRequired();
+
+            builder.Property(rd => rd.ReportResult).HasColumnType("nvarchar");
         }
     }
 }

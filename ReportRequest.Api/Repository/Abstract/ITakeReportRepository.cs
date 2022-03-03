@@ -1,4 +1,5 @@
-﻿using ReportRequest.Api.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using ReportRequest.Api.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace ReportRequest.Api.Repository.Abstract
     {
         void AddReport(ReportDetail reportDetail);
         Task<bool> SaveChanges();
-
+        Task<ActionResult<ReportDetail>> GetReport(Guid id);
     }
 }

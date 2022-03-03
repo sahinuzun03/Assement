@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PersonContact.Api.Entities;
 using PersonContact.Api.Infrastructure.Context;
+using PersonContact.Api.Repository.Abstract;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PersonContact.Api.Controllers
@@ -14,26 +18,43 @@ namespace PersonContact.Api.Controllers
     public class ReportController
     {
         private readonly PersonContactDbContext _context;
-        public ReportController(PersonContactDbContext context)
+        private readonly IContactRepository _contactRepository;
+        public ReportController(PersonContactDbContext context, IContactRepository contactRepository)
         {
             _context = context;
+            _contactRepository = contactRepository;
         }
 
+        //Rapor'a ait olan id bilgisini aldık ?!!
         [HttpGet]
-        public Task Handle()
+        public async Task<string> GetReport()
         {
-            // Toplam Kişi Sayısı 
-            var reportDetail = _context.Contacts.GroupBy(x => x.Konum).Select(x => new
+            //Gelen raporu kuyruguğa gönderiyorum
+            var factor = new ConnectionFactory
+            {
+                Uri = new Uri("amqp://admin:123456@localhost:5672")
+            };
+
+            using var connection = factor.CreateConnection();
+            using var channel = connection.CreateModel();
+            channel.QueueDeclare("queue_berkay",
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
+
+            var totalPeople = _context.Contacts.GroupBy(x => x.Konum).Select(x => new
             {
                 location = x.Key,
                 totalPeople = x.Count(),
             });
 
-            //O konumda bulunan toplam telefon numarası
-            var reportDetail2 = _context.Contacts.Where(x => x.TelephoneNumber != null).GroupBy(x => x.Konum).Select(x => new { location = x.Key, totalNumber = x.Count() });
+            var message = totalPeople;
+            var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-            return Task.CompletedTask;
+            channel.BasicPublish("", "queue_berkay", null, body);
+
+            return JsonConvert.SerializeObject(message);
         }
-    
     }
 }
