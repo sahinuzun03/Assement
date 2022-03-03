@@ -22,3 +22,5 @@ Projeye ait fotoğrafları sizinle paylaşacağım.
 
 //Tablolarda şu bilgiler vs boş geçilebilir denmediği için hepsini required olarak girdim sayılırı.Bu yüzden telefon sorgusunda ve toplam kişi sorgusunun tek seferde
 aradan çıkartmış oldum.Eğer telefon sorgusu yapılacak ise groupby yapmadan önce telNum != null yaparak o konumda olanların telefon sayılarını sayabilirim.
+
+Projede swagger yüklü oradan tablo işlemlerini vs gerçekleştirebilirsiniz.Ben isteklerimi POSTMAN üzerinden yaptım.
