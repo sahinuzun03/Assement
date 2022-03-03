@@ -37,11 +37,11 @@ namespace ReportRequest.Api.Controllers
                 ReportDate = DateTime.Now,
                 ReportResult = null
             };
-
+            var queueName = reportDetail.Id.ToString().ToUpper();
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:44349/");
-                var responseTask = client.GetAsync("api/Report/");
+                var responseTask = client.GetAsync("api/Report/"+ queueName);
                 responseTask.Wait();
 
                 var factory = new ConnectionFactory
@@ -49,16 +49,17 @@ namespace ReportRequest.Api.Controllers
                     Uri = new Uri("amqp://admin:123456@localhost:5672")
                 };
 
+                
                 using var connection = factory.CreateConnection();
                 using var channel = connection.CreateModel();
-                channel.QueueDeclare("queue_berkay",
+                channel.QueueDeclare(queueName,
                     durable: true,
                     exclusive: false,
                     autoDelete: false,
                     arguments: null);
 
                 EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
-                channel.BasicConsume("queue_berkay", false, consumer);
+                channel.BasicConsume(queueName, false, consumer);
                 consumer.Received += (sender, e) =>
                 {
                     var body = e.Body.ToArray();

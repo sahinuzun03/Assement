@@ -26,18 +26,18 @@ namespace PersonContact.Api.Controllers
         }
 
         //Rapor'a ait olan id bilgisini aldık ?!!
-        [HttpGet]
-        public async Task<string> GetReport()
+        [HttpGet("{id}")]
+        public async Task<string> GetReport(Guid id)
         {
             //Gelen raporu kuyruguğa gönderiyorum
             var factor = new ConnectionFactory
             {
                 Uri = new Uri("amqp://admin:123456@localhost:5672")
             };
-
+            var queueName = id.ToString().ToUpper();
             using var connection = factor.CreateConnection();
             using var channel = connection.CreateModel();
-            channel.QueueDeclare("queue_berkay",
+            channel.QueueDeclare(queueName,
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
@@ -52,7 +52,7 @@ namespace PersonContact.Api.Controllers
             var message = totalPeople;
             var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-            channel.BasicPublish("", "queue_berkay", null, body);
+            channel.BasicPublish("", queueName, null, body);
 
             return JsonConvert.SerializeObject(message);
         }
