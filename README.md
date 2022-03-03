@@ -3,8 +3,6 @@ Assement
 
 Veri Tabanına Ait Görseller :
 
-Commit atarkende yazmıştım arkadaşımın ismi Berkay'ı kullandım diye burada da belirtmek isterim.Kendisi ile DC konuşurken projeyi yazdım.
-
 Projeye ait fotoğrafları sizinle paylaşacağım.
 
 //Burada Eklenen Kullanıcıların Bilgileri Gözükmektedir.
@@ -24,3 +22,18 @@ Projeye ait fotoğrafları sizinle paylaşacağım.
 aradan çıkartmış oldum.Eğer telefon sorgusu yapılacak ise groupby yapmadan önce telNum != null yaparak o konumda olanların telefon sayılarını sayabilirim.
 
 Projede swagger yüklü oradan tablo işlemlerini vs gerçekleştirebilirsiniz.Ben isteklerimi POSTMAN üzerinden yaptım.
+
+Projede FORKLAMA ve PULL REQUEST yoktur. Bütün kodlar ŞAHSIM tarafından yazılmıştır.
+
+YARARLANILAN KAYNAKLAR: (Yazmayı unuttuğum kaynaklar olabilir.)
+
+1- https://www.gencayyildiz.com/blog/
+2- Youtube : TechBuddy kanalı
+3- https://www.pluralsight.com/
+4- https://docs.microsoft.com/
+5- https://www.c-sharpcorner.com/
+6- https://github.com/dotnet-architecture/eShopOnContainers
+7- https://www.rabbitmq.com/
+8- https://medium.com/@emrebalcii (Docker üzerinden çalıştırmak için) (Normal rabbitmq ve erlang'dillerini kurduğum zaman rabbitMQ ' yü çalıştıramadım bu yüzden şuan Docker üzerinden çalıştırmaktayım. )
+
+
