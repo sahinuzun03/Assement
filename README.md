@@ -9,7 +9,7 @@ Projeye ait fotoğrafları sizinle paylaşacağım.
 
 ![Kullanıcı Eklenmesi](https://user-images.githubusercontent.com/83523992/156642001-94e8e327-4214-4d44-aac4-dd4ab09adbd9.jpg)
 
-//Kullanıcılar ve kullanıcıların iletişimleri arasında 1'e çok ilişki vardır.(Çoka çok ilişkide yapabilirdim)
+//Kullanıcılar ve kullanıcıların iletişimleri arasında 1'e çok ilişki vardır.(Çoka çok ilişkide yapabilirdim) Burada iletişim bilgisi eklerden postmande tetiklediğimin için 1 tane personId üzerinden devam ettim kodun doğru çalışıp çalışmadığının görebilmek için.
 ![Kullanıcıya Ait İletişim](https://user-images.githubusercontent.com/83523992/156642039-0ed481a7-416c-4aef-8031-a487d09cca6e.jpg)
 
 //Rapor talep edildiği zaman Person api'den istek gidip istek sonucunda raorun getirilmesi ve database'e kaydedilmesi
