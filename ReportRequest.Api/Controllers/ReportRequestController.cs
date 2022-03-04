@@ -74,8 +74,12 @@ namespace ReportRequest.Api.Controllers
                     // Bu aşağıdaki kod göndermiş olduğum json nesneyi çevirmeye yarar.
                     //var x = JsonConvert.DeserializeObject(message);
                     //Burada gelen mesajı veritabanında string olarak kaydettim ve raporun statüsünü completed'a çektim.
-                    reportDetail.ReportStatus = ReportStatus.completed;
-                    reportDetail.ReportResult = message.ToString();
+                    //Raporun güncellenmesi ve kaydedilmesi.
+                    var report = _report.GetReports(reportDetail.Id);
+                    report.ReportStatus = ReportStatus.completed;
+                    report.ReportResult = message.ToString();
+                    _report.Update(report);
+                    _report.SaveChanges();
                 };
 
                 //Kuyruktan gelen bilgilerle beraber raporu database kaydediyorum.

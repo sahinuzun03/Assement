@@ -12,5 +12,7 @@ namespace ReportRequest.Api.Repository.Abstract
         void AddReport(ReportDetail reportDetail);
         Task<bool> SaveChanges();
         Task<ActionResult<ReportDetail>> GetReport(Guid id);
+        ReportDetail GetReports(Guid id);
+        void Update(ReportDetail reportDetail);
     }
 }

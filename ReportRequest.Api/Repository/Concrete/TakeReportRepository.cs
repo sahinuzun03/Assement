@@ -35,6 +35,17 @@ namespace ReportRequest.Api.Repository.Concrete
             return (await _context.SaveChangesAsync() > 0);
         }
 
+        public void Update(ReportDetail reportDetail)
+        {
+            _context.ReportDetails.Update(reportDetail);
+        }
+
+        public ReportDetail GetReports(Guid id)
+        {
+            return _context.ReportDetails.Find(id);
+            
+        }
+
         
     }
 }
