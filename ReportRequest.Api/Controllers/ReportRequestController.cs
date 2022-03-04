@@ -29,7 +29,7 @@ namespace ReportRequest.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ReportDetail>> TakeReport()
         {
-
+            //Post metot her tetiklendiğinde 1 tane rapor detayı oluşturuyorum.
             ReportDetail reportDetail = new ReportDetail
             {
                 Id = Guid.NewGuid(),
@@ -37,7 +37,11 @@ namespace ReportRequest.Api.Controllers
                 ReportDate = DateTime.Now,
                 ReportResult = null
             };
+
+            //Kuyruk ismini oluşan rapordetayının id parametresi olarak aldım.
             var queueName = reportDetail.Id.ToString().ToUpper();
+
+            //PersonContactApi'de bulunan Report ' u tetikliyorum böylelikle rapora ait bilgiler kuyruğa göndermiş ve buradan okunmasını sağlayacapım.
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:44349/");
@@ -58,6 +62,7 @@ namespace ReportRequest.Api.Controllers
                     autoDelete: false,
                     arguments: null);
 
+                //Consumer event ile gönderileb mesajın okunması işlemlerini gerçekleştiriyorum.
                 EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
                 channel.BasicConsume(queueName, false, consumer);
                 consumer.Received += (sender, e) =>
@@ -73,13 +78,16 @@ namespace ReportRequest.Api.Controllers
                     reportDetail.ReportResult = message.ToString();
                 };
 
+                //Kuyruktan gelen bilgilerle beraber raporu database kaydediyorum.
                 _report.AddReport(reportDetail);
                 await _report.SaveChanges();
 
             }
+            //Son olarakta raporu getiriyorum.
             return CreatedAtAction("GetReport", new { id = reportDetail.Id }, reportDetail); //Gelen modeli tekrardan kullanıcıya gösterdim.
         }
 
+        //id parametresini alarak raporun görüntülenmesini sağladım.
         [HttpGet("{id}")]
         public async Task<ActionResult<ReportDetail>> GetReport([FromRoute] Guid id)
         {

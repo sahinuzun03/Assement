@@ -25,7 +25,7 @@ namespace PersonContact.Api.Controllers
             _contactRepository = contactRepository;
         }
 
-        //Rapor'a ait olan id bilgisini aldık ?!!
+        //Rapor'a ait olan id bilgisini aldık.
         [HttpGet("{id}")]
         public async Task<string> GetReport(Guid id)
         {
@@ -34,6 +34,8 @@ namespace PersonContact.Api.Controllers
             {
                 Uri = new Uri("amqp://admin:123456@localhost:5672")
             };
+
+            //kuyruk ismini gelen id'ye göre ayarladım.
             var queueName = id.ToString().ToUpper();
             using var connection = factor.CreateConnection();
             using var channel = connection.CreateModel();
@@ -43,6 +45,7 @@ namespace PersonContact.Api.Controllers
                 autoDelete: false,
                 arguments: null);
 
+            //Telefon numarası giriş işlemleri required olarak ayarlandığı için tek sorguda konumda bulunan kişi sayısı ve telefon bilgisini getirmiş oluyorum.Eğer telefon numarası null geçilebilir olarak ayarlanırsa groupby yapmadan önce where(telefonNum != null).GroupBy  işlemi gerçekleştirilerek telefon numarası sorgulanabilir. 
             var totalPeople = _context.Contacts.GroupBy(x => x.Konum).Select(x => new
             {
                 location = x.Key,
@@ -52,7 +55,7 @@ namespace PersonContact.Api.Controllers
             var message = totalPeople;
             var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-            channel.BasicPublish("", queueName, null, body);
+            channel.BasicPublish("", queueName, null, body);//Mesajı rabbitmq kuyruğuna gönderdim.
 
             return JsonConvert.SerializeObject(message);
         }

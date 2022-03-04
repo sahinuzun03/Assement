@@ -16,16 +16,20 @@ namespace ReportRequest.Api.Repository.Concrete
         {
             _context = context;
         }
+
+        //Rapor'u database'e eklemek için yazılmıştır.
         public void AddReport(ReportDetail reportDetail)
         {
             _context.ReportDetails.AddAsync(reportDetail);
         }
 
+        //Database'de bulunan rapor bilgisinin getirilmesi
         public async Task<ActionResult<ReportDetail>> GetReport(Guid id)
         {
             return await _context.ReportDetails.FindAsync(id);
         }
 
+        //Database'e kayıt edebilmek için yazılmıştır.SaveChanges yapılmazsa AddReport yapılsa dahi veri database'e gönderilmez.
         public async Task<bool> SaveChanges()
         {
             return (await _context.SaveChangesAsync() > 0);
