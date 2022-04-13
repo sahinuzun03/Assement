@@ -30,16 +30,14 @@ namespace ReportRequest.Api.Controllers
         public async Task<ActionResult<ReportDetail>> TakeReport()
         {
             //Post metot her tetiklendiğinde 1 tane rapor detayı oluşturuyorum.
-            ReportDetail reportDetail = new ReportDetail
-            {
-                Id = Guid.NewGuid(),
-                ReportStatus = ReportStatus.getReady,
-                ReportDate = DateTime.Now,
-                ReportResult = null
-            };
+            ReportDetail reportDetail = new ReportDetail();
+            //Rapor oluşturuldu ve oluşturulan rapor database'e kaydedildi.
+            _report.AddReport(reportDetail);
+            await _report.SaveChanges();
 
             //Kuyruk ismini oluşan rapordetayının id parametresi olarak aldım.
             var queueName = reportDetail.Id.ToString().ToUpper();
+            
 
             //PersonContactApi'de bulunan Report ' u tetikliyorum böylelikle rapora ait bilgiler kuyruğa göndermiş ve buradan okunmasını sağlayacapım.
             using (var client = new HttpClient())
@@ -53,9 +51,14 @@ namespace ReportRequest.Api.Controllers
                     Uri = new Uri("amqp://admin:123456@localhost:5672")
                 };
 
-                
                 using var connection = factory.CreateConnection();
                 using var channel = connection.CreateModel();
+                /*
+                 * İlk parametre kuyruk ismimizi belirtmek için kullanılır.
+                 * Durable parametre ise kuyruğa gönderilen mesaj otomatik olarak silinecek mi ?
+                 * Exclusive parametre kuyruk farklı connectionlarda kullanılabilir onu belirliyoruz.
+                 * Autodelete parametre bu parametre ile kuyrukta yer alan veri consumer'a ulaştığında silinmesi ayarlanması sağlar.
+                 */
                 channel.QueueDeclare(queueName,
                     durable: true,
                     exclusive: false,
@@ -83,9 +86,6 @@ namespace ReportRequest.Api.Controllers
                 };
 
                 //Kuyruktan gelen bilgilerle beraber raporu database kaydediyorum.
-                _report.AddReport(reportDetail);
-                await _report.SaveChanges();
-
             }
             //Son olarakta raporu getiriyorum.
             return CreatedAtAction("GetReport", new { id = reportDetail.Id }, reportDetail); //Gelen modeli tekrardan kullanıcıya gösterdim.
